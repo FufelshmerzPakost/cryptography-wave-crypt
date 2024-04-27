@@ -1,5 +1,5 @@
 use rand::Rng;
-use hex::{self, encode};
+use hex;
 
 fn hex_to_vec(message: &str) -> Vec<u8> {
     let mut res:Vec<u8> = Vec::new();
@@ -31,10 +31,8 @@ fn f_of(x: u8, z: f32, n: f32, dx: f32) -> char {
 
 fn encrypt(message: &str, z: f32, dx: f32) -> String {
     let mut res: String = String::new();
-    let mut rres: Vec<i32> = Vec::new();
     for (idx, num) in message.chars().enumerate() {
         let val = f_to(num as u8, z, idx as f32, dx);
-        rres.push(val as i32);
         res.push_str(&format!("{:02x}", val as u8));
     }
     res
@@ -42,18 +40,16 @@ fn encrypt(message: &str, z: f32, dx: f32) -> String {
 
 fn decrypt(enc_message: &str, z: f32, dx: f32) -> String {
     let mut res: String = String::new();
-    let mut temp: Vec <u8> = hex_to_vec(enc_message);
+    let temp: Vec <u8> = hex_to_vec(enc_message);
     for (idx, num) in temp.iter().enumerate() {
-        let val = f_of(*num, z, idx as f32, dx);
-        res.push(val);
+        res.push(f_of(*num, z, idx as f32, dx));
     }
     res
 }
 
-
 fn main() {
 
-    let message: &str = "boyko stanislav denisovich";
+    let message: &str = "A bear was walking through the forest and saw a car on fire. He got in the car and burned to death.";
     let dx: f32 = rand::thread_rng().gen_range(-500..500) as f32;
     let z: f32 = rand::thread_rng().gen_range(-500..500) as f32;
 
